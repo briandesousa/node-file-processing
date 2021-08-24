@@ -1,78 +1,83 @@
 import * as fsPromises from 'fs/promises';
 
-async function createLink(path, linkName) {
+async function createHardLink(existingPath, newPath) {
     try {
-        await fsPromises.createLink(path, linkName);
-        console.log(`created a hard link named '${linkName}' linked to ${path}`);
+        await fsPromises.link(existingPath, newPath);
+        console.log(`created a hard link at '${newPath}' linked to ${existingPath}`);
     } catch (err) {
         console.error(err.message);
     }
 }
 
-async function createSymbolicLink(targetPath, path) {
+async function createSoftLink(targetPath, path) {
     try {
         await fsPromises.symlink(targetPath, path);
-        console.log(`created a soft (symbolic) link from ${targetPath} to ${path}`);
+        console.log(`created a soft (symbolic) link at ${path} pointing to ${targetPath}`);
     } catch (err) {
         console.error(err.message);
     }
 }
 
-async function readLink(fileURL) {
+async function readSoftLink(path) {
     try {
-        //TODO
-        // read a soft and/or hard link?
-        linkString = await fsPromises.readLink(fileURL, 'r');
+        const linkString = await fsPromises.readlink(path);
+        console.log(`symbolic link ${path} points to ${linkString}`);
     } catch (err) {
-        console.error('Error: ', err.message);
+        console.error(err.message);
     }
 }
 
-async function updateLinkTimestamp(fileURL) {
+async function updateSoftLinkTimestamp(path, accessTime, modifyTime) {
     try {
-        //TODO
-        // update hard and/or soft link timestamp?
-        //fileHandle.lutimes()
+        let {atimeMs: originalAccessTime, mtimeMs: originalModifiedTime} = await fsPromises.lstat(path);
+        console.log(`access time for ${path} before update: ${new Date(originalAccessTime)}`);
+        console.log(`modify time for ${path} before update: ${new Date(originalModifiedTime)}`);
+
+        await fsPromises.lutimes(path, accessTime, modifyTime);
+        console.log(`updated access and modified timestamp on ${path} to ${accessTime} and ${modifyTime} respectively`);
     } catch (err) {
-        console.error('Error: ', err.message);
+        console.error(err.message);
     }
 }
 
-async function updateLinkOwnership(fileURL) {
+async function updateLinkPermissions(path, mode) {
     try {
-        //TODO
-        // update hard and/or soft link timestamp?
-        //fsPromises.lchown()
+        console.log(`set ${mode} permissions on ${path}`);
+        await fsPromises.lchmod(path, mode);
+        const stat = await fsPromises.stat(path);
+        const modeAsDecimal = parseInt(stat.mode.toString(8), 10);
+        console.log(`mode for ${path}: ${modeAsDecimal}`);
     } catch (err) {
-        console.error('Error: ', err.message);
+        // expect 'The lchmod() method is not implemented'error
+        // POSIX doesn't require a lchmod function and Linux doesn't include one
+        console.error(err.message);
     }
 }
 
-async function updateLinkPermissions(fileURL) {
+async function updateLinkOwner(path, uid, gid) {
     try {
-        //TODO
-        // update hard and/or soft link permissions?
-        //fsPromise.lchmod()
+        await fsPromises.lchown(path, uid, gid);
+        console.log(`changed ownership of ${path}, uid = ${uid}, gid =${gid})`);
     } catch (err) {
-        console.error('Error: ', err.message);
+        console.error(err.message);
     }
 }
 
-async function removeLink(target, path) {
+async function removeLink(path) {
     try {
-        //TODO
-        //fsPromises.unlink(target, path)
+        await fsPromises.unlink(path);
+        console.log(`removed ${path}`);
     } catch (err) {
-        console.error('Error: ', err.message);
+        console.error(err.message);
     }
 }
 
 export {
-    createLink,
-    createSymbolicLink,
-    readLink,
-    updateLinkTimestamp,
-    updateLinkOwnership,
+    createHardLink,
+    createSoftLink,
+    readSoftLink,
+    updateSoftLinkTimestamp,
+    updateLinkOwner,
     updateLinkPermissions,
     removeLink
 };

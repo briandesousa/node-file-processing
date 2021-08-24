@@ -26,12 +26,8 @@ async function updateFileTimestamp(path, accessTime, modifyTime) {
         console.log(`access time for ${path} before update: ${new Date(originalAccessTime)}`);
         console.log(`modify time for ${path} before update: ${new Date(originalModifiedTime)}`);
 
-        console.log(`updating access and modified timestamp on ${path} to ${accessTime} and ${modifyTime} respectively`);
         await fsPromises.utimes(path, accessTime, modifyTime);
-
-        let {atimeMs: updatedAccessTime, mtimeMs: updatedModifiedTime} = await fsPromises.stat(path);
-        console.log(`access time for ${path} after update: ${new Date(updatedAccessTime)}`);
-        console.log(`modify time for ${path} after update: ${new Date(updatedModifiedTime)}`);
+        console.log(`updated access and modified timestamp on ${path} to ${accessTime} and ${modifyTime} respectively`);
     } catch (err) {
         console.error(err.message);
     }
@@ -83,7 +79,7 @@ async function updateFilePermissions(path, mode) {
 async function updateFileOwner(path, uid, gid) {
     try {
         await fsPromises.chown(path, uid, gid);
-        console.log(`changed owner of ${path} to root (uid = ${uid}, gid = ${gid})`);
+        console.log(`changed ownership of ${path}, uid = ${uid}, gid =${gid})`);
     } catch (err) {
         console.error(err.message);
     }
