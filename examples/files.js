@@ -24,7 +24,7 @@ async function readFile(path) {
 
 async function readFileInAppendMode(path) {
     try {
-        const data = await fsPromises.readFile(pat, { flag: 'a'});
+        const data = await fsPromises.readFile(path, { flag: 'a'});
         console.log(`content of ${path}: ${data}`);
     } catch (err) {
         console.error(err.message);
@@ -47,6 +47,7 @@ async function readFileAbort(path) {
         const controller = new AbortController();
         const { signal } = controller;
         const promise = fsPromises.readFile(path, { flag: 'r', signal: signal });
+        console.log(`started reading file: ${path}`);
         controller.abort();      
         await promise;
     } catch (err) {
@@ -143,8 +144,10 @@ async function watchFile(path, timeToWatch) {
         }
     } catch (err) {
         // abort signal is treated as an exception
-        if (err.name === 'AbortError')
+        if (err.name === 'AbortError') {
+            console.log(`watch on ${path} aborted`);
             return;
+        }
         console.error(err.message);
     }
 }

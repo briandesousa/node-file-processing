@@ -9,7 +9,8 @@ async function resetData(dataDirectory) {
         // create directories
         fs.mkdirSync(dataDirectory, { recursive: true });
         fs.chmodSync(dataDirectory, '00777');
-
+        fs.mkdirSync(`${dataDirectory}/testDir1/nestedDir`, { recursive: true });
+        
         // create files
         [
             { 
@@ -23,6 +24,14 @@ async function resetData(dataDirectory) {
             { 
                 'fileName': 'chmod.txt', 
                 'fileData': 'Test access changes'
+            },
+            { 
+                'fileName': 'testDir1/test2.txt', 
+                'fileData': 'Test file in sub-directory'
+            },
+            { 
+                'fileName': 'testDir1/test3.txt', 
+                'fileData': 'Test file in sub-directory'
             }
         ].forEach(file => 
             fs.writeFileSync(`${dataDirectory}/${file.fileName}`, file.fileData));
