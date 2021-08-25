@@ -28,7 +28,15 @@ async function resetData(dataDirectory) {
             fs.writeFileSync(`${dataDirectory}/${file.fileName}`, file.fileData));
 
         // create symbolic links
-        fs.symlinkSync(`test1.txt`, `${dataDirectory}/test1-sym-link`);
+        try {
+            fs.symlinkSync(`test1.txt`, `${dataDirectory}/test1-sym-link`);
+        } catch(err) {
+            if(err.code == 'EPERM') {
+                console.log('Failed to create symbolic link with EPERM error. If this is running on Windows, some examples are expected to fail.');
+                return;
+            }
+            throw err;
+        }
 
         
     } catch (err) {
