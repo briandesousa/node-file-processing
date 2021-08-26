@@ -1,0 +1,157 @@
+  Comparing FS module APIs
+  1) Read a file with readFile() from the promise API:
+  content of ./data/test1.txt: Here is some top secret data.
+  2) Read a file with readFile() from the callback API:
+  content of ./data/test1.txt: Here is some top secret data.
+  3) Read a file with readFileSync() from the sync API:
+  content of ./data/test1.txt: Here is some top secret data.
+
+  Working with files
+  4) Open a file:
+  opened ./data/test1.txt, the numeric file descriptor of this file is 19
+  5) Open a directory:
+  opened ./data, the numeric file descriptor of this file is 19
+  6) Fail to open a file that does not exist:
+  ENOENT: no such file or directory, open './data/nonexistant.txt'
+  7) Read a file:
+  content of ./data/test1.txt: Here is some top secret data.
+  8) Fail to read a file opened in append mode:
+  EBADF: bad file descriptor, read
+  9) Read a file as base64 encoding:
+  content of ./data/test1.txt: SGVyZSBpcyBzb21lIHRvcCBzZWNyZXQgZGF0YS4g
+  convert base64 file content back to an ASCII string: Here is some top secret data.
+  10) Start to read a file but abort the operation early:
+  started reading file: ./data/test1.txt
+  The operation was aborted
+  11) Create a copy of a file:
+  file copied from ./data/test1.txt to ./data/test1-copy.txt
+  12) Create a second copy of a file and overwrite the destination if it already exists:
+  file copied from ./data/test1.txt to ./data/test1-copy.txt
+  13) Fail to create a third copy of a file because destination already exists:
+  EEXIST: file already exists, copyfile './data/test1.txt' -> './data/test1-copy.txt'
+  14) Append data to an existing file:
+  file content before appending new data: Here is some top secret data.
+  updated file content after appending new data: Here is some top secret data.  More important data.
+  15) Append data to a file that doesn't exist yet:
+  ENOENT: no such file or directory, open './data/appendNew.txt'
+  updated file content after appending new data: More important data.
+  16) Write data to a new file:
+  'This data was written.' written to ./data/writeNew.txt
+  17) Write data to an existing file:
+  content of ./data/writeNew.txt before write: This data was written.
+  'Rewritten.' written to ./data/writeNew.txt
+  content of ./data/writeNew.txt after write: Rewritten.
+  18) Truncate data in existing file:
+  content of ./data/test1.txt before truncate: Here is some top secret data.  More important data.
+  everything after first 29 characters truncated from ./data/test1.txt
+  content of ./data/test1.txt after truncate: Here is some top secret data.
+  19) Watch for changes on a file for 3 seconds:
+  delete the watched file to trigger a watch event
+  'change' watch event was raised for watchTest.txt
+  'rename' watch event was raised for watchTest.txt
+  'rename' watch event was raised for watchTest.txt
+  watch on ./data/watchTest.txt aborted
+
+  Working with file metadata
+  20) Read size of a file:
+  size of ./data/test1.txt is 29 bytes
+  21) Read size of a folder (unexpected folder size):
+  size of ./data is 4096 bytes
+  22) View all stats of a file:
+  stats for ./data/test1.txt:
+  {
+    dev: 2080,
+    mode: 33188,
+    nlink: 1,
+    uid: 0,
+    gid: 0,
+    rdev: 0,
+    blksize: 4096,
+    ino: 46795,
+    size: 29,
+    blocks: 8,
+    atimeMs: 1629857260391.8247,
+    mtimeMs: 1629857260391.8247,
+    ctimeMs: 1629857260391.8247,
+    birthtimeMs: 1629857260361.8247,
+    atime: 2021-08-25T02:07:40.392Z,
+    mtime: 2021-08-25T02:07:40.392Z,
+    ctime: 2021-08-25T02:07:40.392Z,
+    birthtime: 2021-08-25T02:07:40.362Z
+  }
+  23) Check if a file is visible:
+  ./data/test1.txt is visible
+  24) Fail to check access to a file that doesn't exist:
+  ENOENT: no such file or directory, access './data/nonexistent.txt'
+  25) Fail execute access test on a file:
+  remove execute access from ./data/test1.txt
+  EACCES: permission denied, access './data/test1.txt'
+  26) Remove write access on file:
+  set 00500 permissions on ./data/chmod.txt
+  mode for ./data/chmod.txt: 100500
+  27) Change user and group owners of a file to root:
+  changed ownership of ./data/chmod.txt, uid = 0, gid =0)
+  28) Change ownership of file to non-existent user and group:
+  changed ownership of ./data/chmod.txt, uid = 12345, gid =12345)
+  29) Set access and modified timestamps on a file:
+  access time for ./data/test1.txt before update: Tue Aug 24 2021 22:07:40 GMT-0400 (Eastern Daylight Time)
+  modify time for ./data/test1.txt before update: Tue Aug 24 2021 22:07:40 GMT-0400 (Eastern Daylight Time)
+  updated access and modified timestamp on ./data/test1.txt to Wed Jan 01 2020 00:00:00 GMT-0500 (Eastern Standard Time) and Wed Jan 01 2020 00:00:00 GMT-0500 (Eastern Standard Time) respectively
+  30) Get the real path for a relative path:
+  real path of ./data is /home/brian/node-file-processing/data
+  31) Get the real path for a soft (symbolic) link:
+  real path of ./data/test1-sym-link is /home/brian/node-file-processing/data/test1.txt
+
+  Working with links
+  32) Create a hard link:
+  created a hard link at './data/test1-hard-link' linked to ./data/test1.txt
+  33) Create a soft (symbolic) link:
+  created a soft (symbolic) link at ./data/test1-soft-link pointing to test1.txt
+  34) Read contents of a soft (symbolic) link:
+  symbolic link ./data/test1-soft-link points to test1.txt
+  35) Fail to read contents of a hard link:
+  EINVAL: invalid argument, readlink './data/test1-hard-link'
+  36) Set access and modified timestamps on a soft (symbolic) link:
+  access time for ./data/test1-soft-link before update: Tue Aug 24 2021 22:07:43 GMT-0400 (Eastern Daylight Time)
+  modify time for ./data/test1-soft-link before update: Tue Aug 24 2021 22:07:43 GMT-0400 (Eastern Daylight Time)
+  updated access and modified timestamp on ./data/test1-soft-link to Wed Jan 01 2020 00:00:00 GMT-0500 (Eastern Standard Time) and Wed Jan 01 2020 00:00:00 GMT-0500 (Eastern Standard Time) respectively
+  37) Fail to update permissions on a soft (symbolic) link:
+  set 00500 permissions on ./data/test1-soft-link
+  The lchmod() method is not implemented
+  38) Change user and group owners of a soft (symbolic) link to root:
+  changed ownership of ./data/test1-soft-link, uid = 0, gid =0)
+  39) Remove a soft (symbolic) link:
+  removed ./data/test1-soft-link
+  40) Remove a hard link (and the underlying file it is linked to):
+  removed ./data/test1-hard-link
+
+  Working with directories
+  41) Open a directory:
+  opened directory ./data/testDir1
+  42) Fail to open a file as a directory:
+  ENOTDIR: not a directory, opendir './data/test1.txt'
+  43) Read contents of a directory:
+  read contents of directory ./data/testDir1: nestedDir,test2.txt,test3.txt
+  44) Read contents of a directory with file types:
+  read contents of directory ./data/testDir1:
+  [
+    Dirent { name: 'nestedDir', [Symbol(type)]: 2 },
+    Dirent { name: 'test2.txt', [Symbol(type)]: 1 },
+    Dirent { name: 'test3.txt', [Symbol(type)]: 1 }
+  ]
+  45) Create a directory:
+  created directory: ./data/testDir2
+  46) Create multiple directories recursively:
+  created directory recursively: ./data/testDir3/nestedDir, first directory created was: ./data/testDir3
+  47) Rename a directory:
+  renamed ./data/testDir3 to ./data/testDir3-renamed
+  48) Remove a directory:
+  removed ./data/testDir2
+  49) Remove a directory tree recursively using deprecated rmdir() function:
+  (node:1455) [DEP0147] DeprecationWarning: In future versions of Node.js, fs.rmdir(path, { recursive: true }) will be removed. Use fs.rm(path, { recursive: true }) instead
+  (Use `node --trace-deprecation ...` to show where the warning was created)
+  removed ./data/testDir3-renamed recursively
+  50) Remove a directory tree recursively with rm() function:
+  removed ./data/testDir1 recursively and forcefully
+  51) Remove a non-existent directory with force option to avoid failure:
+  removed ./data/nonExistentDir recursively and forcefully

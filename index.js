@@ -50,7 +50,7 @@ await section('Working with files', async () => {
     await fileExamples.readFile(`${DATA_DIR}/test1.txt`);
 
     console.log('8) Fail to read a file opened in append mode:');
-    await fileExamples.readFileInAppendMode(`${DATA_DIR}/test1.txt`);
+    await fileExamples.readFileCreateFirst(`${DATA_DIR}/test1-write.txt`);
 
     console.log('9) Read a file as base64 encoding:');
     await fileExamples.readFileAsBase64(`${DATA_DIR}/test1.txt`);

@@ -5,7 +5,7 @@ async function openFile(path, flag) {
     let fileHandle;
     try {
         fileHandle = await fsPromises.open(path, flag);
-        console.log(`opened ${path}, the numeric file descriptor of this file is ${fileHandle.fd}`);
+        console.log(`opened ${path}, file descriptor is ${fileHandle.fd}`);
     } catch (err) {
         console.error(err.message);
     } finally {
@@ -22,9 +22,9 @@ async function readFile(path) {
     }
 }
 
-async function readFileInAppendMode(path) {
+async function readFileCreateFirst(path) {
     try {
-        const data = await fsPromises.readFile(path, { flag: 'a'});
+        const data = await fsPromises.readFile(path, { flag: 'w'});
         console.log(`content of ${path}: ${data}`);
     } catch (err) {
         console.error(err.message);
@@ -155,7 +155,7 @@ async function watchFile(path, timeToWatch) {
 export { 
     openFile,
     readFile,
-    readFileInAppendMode,
+    readFileCreateFirst,
     readFileAsBase64,
     readFileAbort,
     copyFile,
