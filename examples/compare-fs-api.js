@@ -17,7 +17,7 @@ function usingCallbackAPI(path, processFile) {
         } else {
             console.log(`content of ${path}: ${data}`);
         }
-        processFile(data);
+        processFile();
     });
 }
 
