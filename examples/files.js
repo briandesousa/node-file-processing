@@ -134,7 +134,7 @@ async function watch(path, timeToWatch) {
         const { signal } = abortController;
         setTimeout(() => abortController.abort(), timeToWatch);
 
-        const watchEventAsyncIterator = fsPromises.watchFile(path, { signal });
+        const watchEventAsyncIterator = fsPromises.watch(path, { signal });
 
         console.log('delete the watched file to trigger a watch event');
         setTimeout(() => fs.unlinkSync(path), 1000);
