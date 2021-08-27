@@ -83,7 +83,7 @@ await section('Working with files', async () => {
     await fileExamples.truncateFile(`${DATA_DIR}/test1.txt`, 29);
 
     console.log('19) Watch for changes on a file for 3 seconds:');
-    await fileExamples.watchFile(`${DATA_DIR}/watchTest.txt`, 3000);
+    await fileExamples.watch(`${DATA_DIR}/watchTest.txt`, 3000);
 });
 
 await section('Working with file metadata', async () => {

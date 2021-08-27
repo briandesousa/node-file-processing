@@ -128,13 +128,13 @@ async function truncateFile(path, length) {
     } 
 }
 
-async function watchFile(path, timeToWatch) {
+async function watch(path, timeToWatch) {
     try {
         const abortController = new AbortController();
         const { signal } = abortController;
         setTimeout(() => abortController.abort(), timeToWatch);
 
-        const watchEventAsyncIterator = fsPromises.watch(path, { signal });
+        const watchEventAsyncIterator = fsPromises.watchFile(path, { signal });
 
         console.log('delete the watched file to trigger a watch event');
         setTimeout(() => fs.unlinkSync(path), 1000);
@@ -164,5 +164,5 @@ export {
     writeFile,
     writeFileOverwrite,
     truncateFile,
-    watchFile
+    watch
 }
