@@ -12,9 +12,9 @@ async function readFileSize(path) {
 
 async function readAllStats(path) {
     try {
-        const {...stats} = await fsPromises.stat(path);
+        const fileStats = await fsPromises.stat(path);
         console.log(`stats for ${path}:`);
-        console.log(stats);
+        console.log(fileStats);
     } catch (err) {
         console.error(err.message);
     }
