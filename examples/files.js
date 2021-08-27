@@ -136,8 +136,10 @@ async function watch(path, timeToWatch) {
 
         const watchEventAsyncIterator = fsPromises.watch(path, { signal });
 
-        console.log('delete the watched file to trigger a watch event');
-        setTimeout(() => fs.unlinkSync(path), 1000);
+        setTimeout(() => {
+            fs.writeFileSync(path, 'new data');
+            console.log(`modified ${path}`);
+        }, 1000);
 
         for await (const event of watchEventAsyncIterator) {
             console.log(`'${event.eventType}' watch event was raised for ${event.filename}`);
