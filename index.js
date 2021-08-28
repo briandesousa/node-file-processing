@@ -44,7 +44,7 @@ await section('Working with files', async () => {
     await fileExamples.openFile(`${DATA_DIR}`);
 
     console.log('6) Fail to open a file that does not exist:');
-    await fileExamples.openFile(`${DATA_DIR}/nonexistant.txt`);
+    await fileExamples.openFile(`${DATA_DIR}/nonexistent.txt`);
 
     console.log('7) Read a file:');
     await fileExamples.readFile(`${DATA_DIR}/test1.txt`);
