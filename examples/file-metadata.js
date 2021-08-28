@@ -55,7 +55,7 @@ async function testFileExecuteAccess(path) {
     // Execute access applies to Linux systems only (no effect on Windows)
     try {
         console.log(`remove execute access from ${path}`);
-        fs.chmodSync(path, '00200');
+        fs.chmodSync(path, '00666');
 
         await fsPromises.access(path, fs.constants.X_OK); 
         console.log(`${path} is executable`)
@@ -66,11 +66,11 @@ async function testFileExecuteAccess(path) {
 
 async function updateFilePermissions(path, mode) {
     try {
-        console.log(`set ${mode} permissions on ${path}`);
         await fsPromises.chmod(path, mode);
+
         const stat = await fsPromises.stat(path);
-        const modeAsDecimal = parseInt(stat.mode.toString(8), 10);
-        console.log(`mode for ${path}: ${modeAsDecimal}`);
+        const updatedMode = `${parseInt(stat.mode.toString(8), 10)}`;
+        console.log(`permission mode for ${path}: ${updatedMode}`);
     } catch (err) {
         console.error(err.message);
     }

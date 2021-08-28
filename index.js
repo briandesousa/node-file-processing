@@ -105,8 +105,8 @@ await section('Working with file metadata', async () => {
     console.log('25) Fail execute access test on a file:');
     await fileMetadataExamples.testFileExecuteAccess(`${DATA_DIR}/test1.txt`);
 
-    console.log('26) Remove write access on file:');
-    await fileMetadataExamples.updateFilePermissions(`${DATA_DIR}/chmod.txt`, '00500');
+    console.log('26) Remove all execute access on file:');
+    await fileMetadataExamples.updateFilePermissions(`${DATA_DIR}/chmod.txt`, '00666');
 
     console.log('27) Change user and group owners of a file to root:');
     await fileMetadataExamples.updateFileOwner(`${DATA_DIR}/chmod.txt`, 0, 0);
